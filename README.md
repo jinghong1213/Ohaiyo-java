@@ -68,6 +68,18 @@ java -jar target/ohayo.jar capture     # take a snapshot
 java -jar target/ohayo.jar launcher    # open the morning GUI
 ```
 
+## Demo / same-day testing
+
+By default the launcher only shows snapshots from **before midnight today**
+(the "yesterday" definition). For demos or quick iteration, pass `--latest`
+to load whatever's newest:
+
+```
+java -jar target/ohayo.jar capture
+# close a few apps to simulate "shutting down"
+java -jar target/ohayo.jar launcher --latest
+```
+
 ## Key things to read first (for learning)
 
 | File | Why it's interesting |

@@ -27,6 +27,12 @@ public final class Launcher {
     private static final Path DATA_DIR    = ROOT.resolve("data");
 
     public static void main(String[] args) throws Exception {
+        // 0. Tiny argument parsing — just one flag.
+        boolean latestFlag = false;
+        for (String a : args) {
+            if ("--latest".equals(a)) latestFlag = true;
+        }
+
         // 1. Read config.
         Map<String, Object> config;
         try {
@@ -39,25 +45,36 @@ public final class Launcher {
             return;
         }
 
-        // 2. Find the most recent capture from before midnight today.
-        //    "Yesterday's last snapshot" by definition.
-        LocalDateTime todayStart = LocalDate.now().atStartOfDay();
-        Optional<Path> latest = Storage.latestSessionBefore(DATA_DIR, todayStart);
+        // 2. Pick which snapshot to load.
+        //    Default = the newest from BEFORE midnight today (true "yesterday").
+        //    --latest = the newest of any age — used for same-day demos where you
+        //               capture, close some apps, then relaunch immediately.
+        Optional<Path> latest;
+        if (latestFlag) {
+            List<Path> all = Storage.listSessions(DATA_DIR);
+            latest = all.isEmpty() ? Optional.empty()
+                                   : Optional.of(all.get(all.size() - 1));
+        } else {
+            LocalDateTime todayStart = LocalDate.now().atStartOfDay();
+            latest = Storage.latestSessionBefore(DATA_DIR, todayStart);
+
+            // Day-one fallback: if there's no "yesterday" yet, take whatever exists.
+            if (latest.isEmpty()) {
+                List<Path> all = Storage.listSessions(DATA_DIR);
+                if (!all.isEmpty()) {
+                    latest = Optional.of(all.get(all.size() - 1));
+                }
+            }
+        }
 
         if (latest.isEmpty()) {
-            // Fall back to "any latest session" so the GUI still has something
-            // to show on day one (before you've had a real "yesterday").
-            List<Path> all = Storage.listSessions(DATA_DIR);
-            if (all.isEmpty()) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "No session snapshots found in " + DATA_DIR + "\n\n" +
-                        "Run capture first:\n  java -jar ohayo.jar capture",
-                        "Ohayo",
-                        JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-            latest = Optional.of(all.get(all.size() - 1));
+            JOptionPane.showMessageDialog(
+                    null,
+                    "No session snapshots found in " + DATA_DIR + "\n\n" +
+                    "Run capture first:\n  java -jar ohayo.jar capture",
+                    "Ohayo",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
         }
 
         Path sessionPath = latest.get();
