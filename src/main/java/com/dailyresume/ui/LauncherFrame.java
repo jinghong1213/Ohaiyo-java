@@ -45,7 +45,7 @@ public class LauncherFrame extends JFrame {
 
     @SuppressWarnings("unchecked")
     public LauncherFrame(Path sessionPath, Session session, Map<String, Object> config) {
-        super("Daily Resume — yesterday's session");
+        super("Ohayo — yesterday's session");
         this.sessionPath = sessionPath;
         this.session = session;
         this.config = config;

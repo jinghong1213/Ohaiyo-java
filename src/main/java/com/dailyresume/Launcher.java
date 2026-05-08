@@ -52,8 +52,8 @@ public final class Launcher {
                 JOptionPane.showMessageDialog(
                         null,
                         "No session snapshots found in " + DATA_DIR + "\n\n" +
-                        "Run capture first:\n  java -jar daily-resume.jar capture",
-                        "Daily Resume",
+                        "Run capture first:\n  java -jar ohayo.jar capture",
+                        "Ohayo",
                         JOptionPane.INFORMATION_MESSAGE);
                 return;
             }

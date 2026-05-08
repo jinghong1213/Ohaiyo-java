@@ -1,4 +1,6 @@
-# Daily Resume — Java edition
+# Ohayo — Java edition
+
+> *Ohayo* (おはよう) — Japanese for "good morning."
 
 Same idea as the Python version, written in Java so you can read it as a learning
 project. Comments are deliberately heavy in the source files — focus on the
@@ -28,7 +30,7 @@ project. Comments are deliberately heavy in the source files — focus on the
 ## Project layout
 
 ```
-daily-resume-java/
+Ohayo-java/
 ├── pom.xml                              ← Maven build config
 ├── config.json
 ├── src/main/java/com/dailyresume/
@@ -56,14 +58,14 @@ daily-resume-java/
 mvn package
 ```
 
-This produces `target/daily-resume.jar` — a "fat jar" containing every dependency,
+This produces `target/ohayo.jar` — a "fat jar" containing every dependency,
 so you only need Java to run it.
 
 ## Run
 
 ```
-java -jar target/daily-resume.jar capture     # take a snapshot
-java -jar target/daily-resume.jar launcher    # open the morning GUI
+java -jar target/ohayo.jar capture     # take a snapshot
+java -jar target/ohayo.jar launcher    # open the morning GUI
 ```
 
 ## Key things to read first (for learning)

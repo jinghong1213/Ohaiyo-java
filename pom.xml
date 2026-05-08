@@ -10,9 +10,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.dailyresume</groupId>
-    <artifactId>daily-resume</artifactId>
+    <artifactId>ohayo</artifactId>
     <version>0.1.0</version>
     <packaging>jar</packaging>
+    <name>Ohayo</name>
 
     <properties>
         <!-- Java 21 is the current LTS; Maven on this machine runs on 21. -->
@@ -60,13 +61,13 @@
     </dependencies>
 
     <build>
-        <finalName>daily-resume</finalName>
+        <finalName>ohayo</finalName>
         <plugins>
             <!--
               shade plugin = "fat jar" builder. It bundles ALL of our deps
-              into a single daily-resume.jar so the user can run:
-                  java -jar target/daily-resume.jar capture
-                  java -jar target/daily-resume.jar launcher
+              into a single ohayo.jar so the user can run:
+                  java -jar target/ohayo.jar capture
+                  java -jar target/ohayo.jar launcher
               instead of juggling a classpath.
             -->
             <plugin>
