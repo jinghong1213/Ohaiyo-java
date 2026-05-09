@@ -8,8 +8,8 @@ package com.dailyresume;
  * to the real entry points based on the first command-line argument:
  *
  * <pre>
- *   java -jar target/ohayo.jar capture     ← run the daemon once
- *   java -jar target/ohayo.jar launcher    ← open the morning GUI
+ *   java -jar target/ohaiyo.jar capture     ← run the daemon once
+ *   java -jar target/ohaiyo.jar launcher    ← open the morning GUI
  * </pre>
  */
 public final class Main {
@@ -24,7 +24,7 @@ public final class Main {
                 Launcher.main(stripFirst(args));
                 break;
             default:
-                System.err.println("Usage: java -jar ohayo.jar <capture|launcher>");
+                System.err.println("Usage: java -jar ohaiyo.jar <capture|launcher>");
                 System.exit(1);
         }
     }

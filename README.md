@@ -1,6 +1,7 @@
-# Ohayo — Java edition
+# Oh*ai*yo — Java edition
 
-> *Ohayo* (おはよう) — Japanese for "good morning."
+> Pronounced like *ohayō* (おはよう), Japanese for "good morning." The
+> stylized "*ai*" is a nod to the AI-assist that helps build it.
 
 Same idea as the Python version, written in Java so you can read it as a learning
 project. Comments are deliberately heavy in the source files — focus on the
@@ -30,7 +31,7 @@ project. Comments are deliberately heavy in the source files — focus on the
 ## Project layout
 
 ```
-Ohayo-java/
+Ohaiyo-java/
 ├── pom.xml                              ← Maven build config
 ├── config.json
 ├── src/main/java/com/dailyresume/
@@ -58,14 +59,14 @@ Ohayo-java/
 mvn package
 ```
 
-This produces `target/ohayo.jar` — a "fat jar" containing every dependency,
+This produces `target/ohaiyo.jar` — a "fat jar" containing every dependency,
 so you only need Java to run it.
 
 ## Run
 
 ```
-java -jar target/ohayo.jar capture     # take a snapshot
-java -jar target/ohayo.jar launcher    # open the morning GUI
+java -jar target/ohaiyo.jar capture     # take a snapshot
+java -jar target/ohaiyo.jar launcher    # open the morning GUI
 ```
 
 ## Demo / same-day testing
@@ -75,9 +76,9 @@ By default the launcher only shows snapshots from **before midnight today**
 to load whatever's newest:
 
 ```
-java -jar target/ohayo.jar capture
+java -jar target/ohaiyo.jar capture
 # close a few apps to simulate "shutting down"
-java -jar target/ohayo.jar launcher --latest
+java -jar target/ohaiyo.jar launcher --latest
 ```
 
 ## Key things to read first (for learning)

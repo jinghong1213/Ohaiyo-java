@@ -45,7 +45,7 @@ public class LauncherFrame extends JFrame {
 
     @SuppressWarnings("unchecked")
     public LauncherFrame(Path sessionPath, Session session, Map<String, Object> config) {
-        super("Ohayo — yesterday's session");
+        super("Ohaiyo — yesterday's session");
         this.sessionPath = sessionPath;
         this.session = session;
         this.config = config;
@@ -77,10 +77,24 @@ public class LauncherFrame extends JFrame {
         outer.setBorder(new EmptyBorder(12, 12, 12, 12));
         setContentPane(outer);
 
-        // ----- header -----
-        JLabel header = new JLabel("Loaded snapshot: " + sessionPath.getFileName());
-        header.setFont(header.getFont().deriveFont(Font.BOLD, 14f));
-        outer.add(header, BorderLayout.NORTH);
+        // ----- header: brand row + snapshot info, stacked -----
+        // JLabel with HTML lets us italicize part of the text inline.
+        // The CSS color makes the "ai" pop without shouting.
+        JLabel brand = new JLabel(
+                "<html>Oh<i><font color='#5b8def'>ai</font></i>yo</html>");
+        brand.setFont(new Font("Segoe UI", Font.BOLD, 26));
+
+        JLabel snapshotLine = new JLabel("Loaded snapshot: " + sessionPath.getFileName());
+        snapshotLine.setFont(snapshotLine.getFont().deriveFont(Font.PLAIN, 12f));
+        snapshotLine.setForeground(new Color(0x666666));
+
+        JPanel headerStack = new JPanel();
+        headerStack.setLayout(new BoxLayout(headerStack, BoxLayout.Y_AXIS));
+        brand.setAlignmentX(Component.LEFT_ALIGNMENT);
+        snapshotLine.setAlignmentX(Component.LEFT_ALIGNMENT);
+        headerStack.add(brand);
+        headerStack.add(snapshotLine);
+        outer.add(headerStack, BorderLayout.NORTH);
 
         // ----- center: summary on top, two columns below -----
         JPanel center = new JPanel(new BorderLayout(8, 8));

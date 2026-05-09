@@ -71,8 +71,8 @@ public final class Launcher {
             JOptionPane.showMessageDialog(
                     null,
                     "No session snapshots found in " + DATA_DIR + "\n\n" +
-                    "Run capture first:\n  java -jar ohayo.jar capture",
-                    "Ohayo",
+                    "Run capture first:\n  java -jar ohaiyo.jar capture",
+                    "Ohaiyo",
                     JOptionPane.INFORMATION_MESSAGE);
             return;
         }

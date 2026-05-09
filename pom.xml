@@ -10,15 +10,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.dailyresume</groupId>
-    <artifactId>ohayo</artifactId>
+    <artifactId>ohaiyo</artifactId>
     <version>0.1.0</version>
     <packaging>jar</packaging>
-    <name>Ohayo</name>
+    <name>Ohaiyo</name>
 
     <properties>
-        <!-- Java 21 is the current LTS; Maven on this machine runs on 21. -->
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <!--
+          Targeting Java 17 (LTS) because that's what's on the user's PATH.
+          Maven itself runs on a newer JDK, but it cross-compiles to 17 bytecode
+          so the produced jar runs on any 17+ runtime. If you upgrade to JDK 21
+          everywhere, bump these to 21 and you can use sealed classes, etc.
+        -->
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -61,13 +66,13 @@
     </dependencies>
 
     <build>
-        <finalName>ohayo</finalName>
+        <finalName>ohaiyo</finalName>
         <plugins>
             <!--
               shade plugin = "fat jar" builder. It bundles ALL of our deps
-              into a single ohayo.jar so the user can run:
-                  java -jar target/ohayo.jar capture
-                  java -jar target/ohayo.jar launcher
+              into a single ohaiyo.jar so the user can run:
+                  java -jar target/ohaiyo.jar capture
+                  java -jar target/ohaiyo.jar launcher
               instead of juggling a classpath.
             -->
             <plugin>
