@@ -41,7 +41,8 @@ public class LauncherFrame extends JFrame {
     private final List<Map.Entry<JCheckBox, Visit>> urlBoxes = new ArrayList<>();
     private final List<Map.Entry<JCheckBox, AppEntry>> appBoxes = new ArrayList<>();
 
-    private final JLabel status = new JLabel("Tick what you want, untick what was noise.");
+    private final JLabel status = new JLabel(
+            "( =^.^= )  tick what you want, untick what was noise.");
 
     @SuppressWarnings("unchecked")
     public LauncherFrame(Path sessionPath, Session session, Map<String, Object> config) {
@@ -233,35 +234,83 @@ public class LauncherFrame extends JFrame {
     // Launch logic
     // -----------------------------------------------------------------
 
+    // Cat frames used in the status bar while launches play out.
+    private static final String CAT_BUSY = "( =^o^= )";
+    private static final String CAT_IDLE = "( =^.^= )";
+    /** Delay between successive launches so the cat status reads visibly. */
+    private static final int LAUNCH_STEP_MS = 300;
+
     private void onLaunch() {
-        int urls = 0, apps = 0;
+        // Build a single ordered queue of (label, action) pairs. Running it
+        // one step per Swing-Timer tick is what makes the launch feel
+        // animated — the cat status updates between each item.
+        java.util.List<Map.Entry<String, Runnable>> queue = new ArrayList<>();
+
         for (var pair : urlBoxes) {
             if (!pair.getKey().isSelected()) continue;
             Visit v = pair.getValue();
             String tmpl = browserCmdByName.getOrDefault(v.browser(), defaultBrowserCmd);
-            try {
-                runShell(tmpl.replace("{url}", v.url()));
-                urls++;
-            } catch (IOException ex) {
-                System.err.println("failed url " + v.url() + ": " + ex.getMessage());
-            }
+            String label = v.title() != null && !v.title().isBlank() ? v.title() : v.url();
+            if (label.length() > 40) label = label.substring(0, 40) + "…";
+            String finalLabel = label;
+            queue.add(Map.entry(finalLabel, () -> {
+                try {
+                    runShell(tmpl.replace("{url}", v.url()));
+                } catch (IOException ex) {
+                    System.err.println("failed url " + v.url() + ": " + ex.getMessage());
+                }
+            }));
         }
         for (var pair : appBoxes) {
             if (!pair.getKey().isSelected()) continue;
             AppEntry a = pair.getValue();
-            try {
-                if (a.exePath != null && Files.exists(Path.of(a.exePath))) {
-                    new ProcessBuilder(a.exePath).start();
-                } else {
-                    runShell("cmd /c start \"\" \"" + a.name + "\"");
+            queue.add(Map.entry(a.name, () -> {
+                try {
+                    if (a.exePath != null && Files.exists(Path.of(a.exePath))) {
+                        new ProcessBuilder(a.exePath).start();
+                    } else {
+                        runShell("cmd /c start \"\" \"" + a.name + "\"");
+                    }
+                } catch (IOException ex) {
+                    System.err.println("failed app " + a.name + ": " + ex.getMessage());
                 }
-                apps++;
-            } catch (IOException ex) {
-                System.err.println("failed app " + a.name + ": " + ex.getMessage());
-            }
+            }));
         }
-        status.setText("Launched " + urls + " URL(s) and " + apps + " app(s) at "
-                + LocalDateTime.now().withNano(0));
+
+        runLaunchQueue(queue);
+    }
+
+    /**
+     * Step through the launch queue one item per timer tick.
+     *
+     * <p>Each tick: pull (label, action) off the queue head, update the cat
+     * status, run the action, then schedule the next tick. When the queue
+     * empties we settle the status into "idle cat — done".
+     */
+    private void runLaunchQueue(java.util.List<Map.Entry<String, Runnable>> queue) {
+        final int total = queue.size();
+        if (total == 0) {
+            status.setText(CAT_IDLE + "  nothing selected");
+            return;
+        }
+        // Mutable counter inside a single-element array — lambdas need final.
+        final int[] idx = {0};
+        javax.swing.Timer t = new javax.swing.Timer(LAUNCH_STEP_MS, null);
+        t.addActionListener(e -> {
+            if (idx[0] >= total) {
+                t.stop();
+                status.setText(CAT_IDLE + "  done — launched " + total + " item(s).");
+                return;
+            }
+            var entry = queue.get(idx[0]);
+            status.setText(CAT_BUSY + "  launching " + entry.getKey() + "…  ("
+                    + (idx[0] + 1) + "/" + total + ")");
+            entry.getValue().run();
+            idx[0]++;
+        });
+        // Fire the first step immediately so there's no awkward 300ms wait.
+        t.setInitialDelay(0);
+        t.start();
     }
 
     /** Run a shell command. Used for "cmd /c start ..." style launches. */

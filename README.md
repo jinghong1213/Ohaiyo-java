@@ -81,10 +81,22 @@ java -jar target/ohaiyo.jar capture
 java -jar target/ohaiyo.jar launcher --latest
 ```
 
+## The cat 🐱
+
+The launcher opens with a small splash window: a blinking ASCII cat
+`( =^.^= )` plus the *Oh*ai*yo!* greeting. After ~1.8 seconds (or one
+click) the main window appears. While launches play out, the same cat
+"purrs" through the status bar one item at a time.
+
+**Want a real animated cat?** Drop a GIF at `assets/cat.gif`. Swing's
+`ImageIcon` animates it natively in `CatSplash.java`, no extra code
+needed.
+
 ## Key things to read first (for learning)
 
 | File | Why it's interesting |
 |---|---|
+| `CatSplash.java` | Undecorated JWindow, Swing Timer for animation, click-to-dismiss |
 | `Browsers.java` | SQLite from Java; copying a locked DB; Chrome's weird epoch |
 | `Processes.java` | JNA basics — calling Win32 API from Java without writing C |
 | `LauncherFrame.java` | Swing layout patterns — BorderLayout, BoxLayout, JScrollPane |

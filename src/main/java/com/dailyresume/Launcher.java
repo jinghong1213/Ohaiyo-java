@@ -80,9 +80,16 @@ public final class Launcher {
         Path sessionPath = latest.get();
         Session session = Storage.loadSession(sessionPath);
 
-        // 3. Show the window on the Swing thread.
+        // 3. Show the cat splash, then build the main window when it closes.
+        //    Optional GIF at assets/cat.gif overrides the ASCII cat fallback.
         final Map<String, Object> finalConfig = config;
         final Path finalPath = sessionPath;
-        SwingUtilities.invokeLater(() -> new LauncherFrame(finalPath, session, finalConfig).setVisible(true));
+        final java.io.File catGif = ROOT.resolve("assets").resolve("cat.gif").toFile();
+
+        SwingUtilities.invokeLater(() -> {
+            Runnable showLauncher = () ->
+                    new LauncherFrame(finalPath, session, finalConfig).setVisible(true);
+            new com.dailyresume.ui.CatSplash(showLauncher, 1800, catGif).setVisible(true);
+        });
     }
 }
